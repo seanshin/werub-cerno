@@ -72,12 +72,12 @@ docker compose up -d --build
 
 ```bash
 python3 scripts/dev_ai_stub.py &                      # 계약 재현 스텁 :8399
-CERNO_API_KEY=devkey CERNO_AI_BASE=http://127.0.0.1:8399 CERNO_AI_KEY=sk-dev \
+CERNO_API_KEY=CHANGE_ME CERNO_AI_BASE=http://127.0.0.1:8399 CERNO_AI_KEY=CHANGE_ME \
   CERNO_CONFIG_DIR=$PWD/config \
   python3 -m uvicorn cerno.api.main:app --app-dir services/cerno-api --port 8300 &
 cd services/cerno-web && npm install && \
-  CERNO_API_INTERNAL=http://127.0.0.1:8300 CERNO_API_KEY=devkey \
-  CERNO_SESSION_SECRET=devsecret npm run dev
+  CERNO_API_INTERNAL=http://127.0.0.1:8300 CERNO_API_KEY=CHANGE_ME \
+  CERNO_SESSION_SECRET=CHANGE_ME npm run dev
 # 세션 쿠키(HIS launch 대체)는 12_키전환_런북이 아닌 로컬 전용 —
 # scripts/dev_ai_stub.py 상단 주석 참조. "췌장" 포함 질의 = 근거 없음 상태 재현.
 ```
