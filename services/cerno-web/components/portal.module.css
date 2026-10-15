@@ -1,0 +1,141 @@
+.page {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+  font: 15px/1.6 -apple-system, "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+  color: #16181d;
+}
+
+.head { display: flex; align-items: baseline; gap: 1.25rem; margin-bottom: .75rem; }
+.head h1 { font-size: 1.5rem; font-weight: 650; margin: 0; }
+.sub { margin: 0 0 1.5rem; color: #5b6472; }
+.returnBar { margin: 0 0 .9rem; font-size: .88rem; color: #5b6472; }
+.returnBar a { color: #1e4bc4; font-weight: 600; text-decoration: none; }
+.returnBar a:hover { text-decoration: underline; }
+
+.tabs { display: flex; gap: .35rem; }
+.tab, .tabOn {
+  font-size: .9rem; text-decoration: none; padding: .3rem .85rem; border-radius: 7px;
+}
+.tab { color: #5b6472; }
+.tab:hover { background: #f1f3f7; }
+.tabOn { background: #eaf0fe; color: #1e4bc4; font-weight: 620; }
+
+.card {
+  background: #fff;
+  border: 1px solid #e3e6ec;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.card h2 {
+  font-size: 1.05rem; font-weight: 620; margin: 0 0 1.25rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.count {
+  font-size: .8rem; font-weight: 500; color: #5b6472;
+  background: #f1f3f7; border-radius: 999px; padding: .1rem .55rem;
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .9rem; }
+
+.field { display: flex; flex-direction: column; gap: .3rem; margin-bottom: .9rem; }
+.field > span { font-size: .82rem; font-weight: 560; color: #3b424e; }
+.field em { font-style: normal; font-weight: 400; color: #8b93a1; margin-left: .35rem; }
+
+/* CSS Modules 는 순수 선택자만 허용한다 — 요소 선택자는 로컬 클래스 아래에 둔다. */
+.field input,
+.fieldset input[type="file"],
+.fieldset textarea {
+  font: inherit;
+  padding: .5rem .65rem;
+  border: 1px solid #d3d8e0;
+  border-radius: 7px;
+  background: #fff;
+  color: inherit;
+  width: 100%;
+}
+.fieldset textarea { resize: vertical; margin-top: .6rem; font-size: .9rem; }
+.field input:focus,
+.fieldset textarea:focus { outline: 2px solid #4a7cf7; outline-offset: -1px; border-color: transparent; }
+
+.fieldset { border: 1px solid #e8eaf0; border-radius: 9px; padding: 1rem; margin: 0 0 1rem; }
+.fieldset legend { font-size: .82rem; font-weight: 600; padding: 0 .4rem; color: #3b424e; }
+.fieldset legend em { font-style: normal; font-weight: 400; color: #8b93a1; }
+
+.radio, .check { display: flex; align-items: flex-start; gap: .5rem; margin-bottom: .5rem; cursor: pointer; }
+.radio span, .check span { font-size: .9rem; }
+.check { margin: .25rem 0 1rem; }
+.check em { display: block; font-style: normal; font-size: .8rem; color: #8b93a1; margin-top: .1rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
+.chip {
+  font-size: .8rem; padding: .25rem .6rem; border: 1px solid #d3d8e0;
+  border-radius: 999px; cursor: pointer; user-select: none; color: #5b6472;
+}
+.chip input { display: none; }
+.chipOn { background: #eaf0fe; border-color: #4a7cf7; color: #1e4bc4; font-weight: 550; }
+
+.note { font-size: .8rem; color: #8b93a1; margin: .5rem 0 0; }
+
+.actions { display: flex; gap: .6rem; margin-top: 1.25rem; }
+.primary, .secondary, .danger {
+  font: inherit; font-size: .9rem; font-weight: 560;
+  padding: .55rem 1.1rem; border-radius: 8px; cursor: pointer; border: 1px solid transparent;
+}
+.primary { background: #2f62e8; color: #fff; }
+.primary:disabled { background: #b9c4dd; cursor: not-allowed; }
+.secondary { background: #f1f3f7; color: #3b424e; border-color: #d3d8e0; }
+.danger { background: transparent; color: #b3261e; border-color: #e6c8c5; font-size: .8rem; padding: .3rem .7rem; }
+
+.violations, .pass, .notice {
+  margin-top: 1rem; padding: .85rem 1rem; border-radius: 8px; font-size: .88rem;
+}
+.violations { background: #fdf2f1; border: 1px solid #f0d0cc; color: #8c1d18; }
+.violations ul { margin: .5rem 0 0; padding-left: 1.15rem; }
+.violations li { margin: .2rem 0; }
+.pass { background: #eef7f0; border: 1px solid #c9e3d1; color: #1c5b30; }
+.notice { background: #f1f3f7; border: 1px solid #dfe3ea; color: #3b424e; }
+.pass code { background: #dcecdf; padding: .05rem .3rem; border-radius: 4px; }
+
+.empty { color: #8b93a1; font-size: .9rem; margin: 0; }
+
+.table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.table th {
+  text-align: left; font-weight: 560; font-size: .78rem; color: #8b93a1;
+  padding: 0 .6rem .5rem; border-bottom: 1px solid #e8eaf0;
+}
+.table td { padding: .7rem .6rem; border-bottom: 1px solid #f1f3f7; vertical-align: middle; }
+.num { text-align: right; color: #5b6472; font-variant-numeric: tabular-nums; }
+
+.docTitle { display: block; font-weight: 540; }
+.docId { display: block; font-size: .76rem; color: #8b93a1; font-family: ui-monospace, monospace; }
+
+.badge { font-size: .74rem; padding: .12rem .5rem; border-radius: 999px; font-weight: 560; }
+.private { background: #f3eefb; color: #5b2fa8; }
+.group { background: #eaf0fe; color: #1e4bc4; }
+.org { background: #eef7f0; color: #1c5b30; }
+.groups { display: block; font-size: .74rem; color: #8b93a1; margin-top: .15rem; }
+
+@media (prefers-color-scheme: dark) {
+  .page { color: #e6e8ee; }
+  .tab { color: #9aa2b1; }
+  .tab:hover { background: #22262e; }
+  .tabOn { background: #1b2947; color: #a9c2ff; }
+  .card { background: #171a20; border-color: #2a2f38; }
+  .sub, .note, .empty, .docId, .groups, .returnBar { color: #9aa2b1; }
+  .returnBar a { color: #a9c2ff; }
+  .field > span { color: #c3c9d4; }
+  .field input, .fieldset textarea, .fieldset input[type="file"] { background: #0f1216; border-color: #333a45; color: #e6e8ee; }
+  .fieldset { border-color: #2a2f38; }
+  .fieldset legend { color: #c3c9d4; }
+  .chip { border-color: #333a45; color: #9aa2b1; }
+  .chipOn { background: #1b2947; border-color: #4a7cf7; color: #a9c2ff; }
+  .secondary { background: #22262e; color: #c3c9d4; border-color: #333a45; }
+  .count { background: #22262e; }
+  .table th { color: #9aa2b1; border-color: #2a2f38; }
+  .table td { border-color: #22262e; }
+  .violations { background: #2a1614; border-color: #5c2b26; color: #ffb4a8; }
+  .pass { background: #14251a; border-color: #2a4d33; color: #a6dcb4; }
+  .notice { background: #22262e; border-color: #333a45; color: #c3c9d4; }
+}

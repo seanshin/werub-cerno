@@ -1,0 +1,25 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.next/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.DS_Store
+.claude/settings.local.json
+*.log
+logs/
+# 업로드 원문·인제스션 산출물 — PHI 유입 경로. 저장소에 절대 넣지 않는다.
+uploads/
+data/
+eval/out/
+*.tsbuildinfo
+next-env.d.ts

@@ -1,0 +1,323 @@
+/* 질의 화면 — portal.module.css 의 팔레트·관례를 따른다 (기존 시스템 우선). */
+
+.panel { display: flex; flex-direction: column; gap: 1rem; }
+
+.ptBanner {
+  display: flex; gap: .6rem; align-items: baseline; flex-wrap: wrap;
+  background: #eaf0fe; border-radius: 8px; padding: .6rem .85rem; font-size: .84rem;
+}
+.ptWho { font-weight: 620; color: #1e4bc4; }
+.ptHint { color: #5b6472; }
+
+.askBox { border: 1.5px solid #d3d8e0; border-radius: 10px; padding: .75rem .9rem; background: #fff; }
+.askBox textarea {
+  font: inherit; width: 100%; border: none; outline: none; resize: vertical;
+  background: transparent; color: inherit; min-height: 2.6rem;
+}
+.askRow { display: flex; justify-content: flex-end; margin-top: .5rem; }
+
+.primary {
+  font: inherit; font-size: .9rem; font-weight: 560; padding: .5rem 1.1rem;
+  border-radius: 8px; cursor: pointer; border: 1px solid transparent;
+  background: #2f62e8; color: #fff;
+}
+.primary:disabled { background: #b9c4dd; cursor: not-allowed; }
+
+.progress { color: #5b6472; font-size: .88rem; margin: 0; }
+
+/* ── 문답 기록 레일 (CLI 로그) + 레이아웃 ── */
+.layout { display: flex; gap: 1.1rem; align-items: flex-start; }
+.layout > .panel { flex: 1; min-width: 0; }
+.rail {
+  width: 230px; flex-shrink: 0; position: sticky; top: 1rem;
+  display: flex; flex-direction: column; gap: .25rem;
+  border: 1px solid #e3e6ec; border-radius: 10px; padding: .6rem;
+  background: #fafbfc; max-height: 80vh; overflow-y: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.railHead {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .78rem; color: #5b6472; padding: 0 .2rem .35rem;
+  border-bottom: 1px solid #e3e6ec; margin-bottom: .25rem;
+}
+.railNew {
+  border: 1px solid #d3d8e0; background: transparent; border-radius: 6px;
+  font-size: .75rem; padding: .15rem .5rem; cursor: pointer; color: #3b424e;
+}
+.railNew:hover { background: #eef1f5; }
+.railItem {
+  display: flex; gap: .45rem; align-items: baseline; text-align: left;
+  border: 0; background: transparent; border-radius: 6px;
+  padding: .35rem .4rem; cursor: pointer; font-size: .8rem; color: #3b424e;
+  width: 100%;
+}
+.railItem:hover { background: #eef1f5; }
+.railItemOn { background: #eaf0fe; color: #1e4bc4; }
+.railItemOn:hover { background: #eaf0fe; }
+.railGlyph { flex-shrink: 0; opacity: .75; }
+.railDivider {
+  text-align: center; font-size: .68rem; color: #9aa2b1;
+  padding: .3rem 0 .15rem; user-select: none;
+}
+.railQ {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+@media (max-width: 760px) {
+  .layout { flex-direction: column; }
+  .rail { width: 100%; position: static; max-height: 9rem; }
+}
+
+/* ── 예시 질문 · 이어서 배지 ── */
+.examples { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.exLabel { font-size: .8rem; color: #5b6472; }
+.exBtn {
+  border: 1px solid #c9d6f7; background: #f6f9ff; color: #1e4bc4;
+  border-radius: 999px; padding: .35rem .8rem; font-size: .82rem; cursor: pointer;
+}
+.exBtn:hover { background: #eaf0fe; }
+.followNote { font-size: .78rem; color: #5b6472; margin-right: auto; align-self: center; }
+
+/* ── 추천 질문 — 카테고리·위험도·추가 생성 ── */
+.suggestArea { display: flex; flex-direction: column; gap: .6rem; }
+.suggestHead { display: flex; justify-content: space-between; align-items: center; }
+.moreBtn {
+  border: 1px solid #d3d8e0; background: transparent; color: #3b424e;
+  border-radius: 999px; padding: .25rem .7rem; font-size: .78rem; cursor: pointer;
+}
+.moreBtn:hover { background: #eef1f5; }
+.moreBtn:disabled { opacity: .55; cursor: default; }
+.catGroup { display: flex; flex-direction: column; gap: .35rem; }
+.catHead { display: flex; align-items: center; gap: .4rem; }
+.catToggle {
+  border: 0; background: transparent; cursor: pointer; padding: 0;
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-size: .8rem; color: #5b6472;
+}
+.catCount {
+  background: #e5e9f0; border-radius: 999px; padding: 0 .45rem;
+  font-size: .72rem; color: #3b424e;
+}
+.catMore {
+  border: 1px solid #d3d8e0; background: transparent; border-radius: 6px;
+  width: 1.4rem; height: 1.4rem; line-height: 1; cursor: pointer;
+  color: #3b424e; font-size: .85rem;
+}
+.catMore:hover { background: #eef1f5; }
+.catMore:disabled { opacity: .5; cursor: default; }
+.catChips { display: flex; flex-wrap: wrap; gap: .45rem; padding-left: 1.1rem; }
+.exBody {
+  border: 0; background: transparent; color: inherit; cursor: pointer;
+  padding: 0; font: inherit; text-align: left;
+  display: flex; flex-direction: column; gap: .15rem; min-width: 0;
+}
+.exDel {
+  border: 0; background: transparent; color: inherit; cursor: pointer;
+  padding: 0 .1rem; opacity: .4; font-size: .8rem; flex-shrink: 0;
+}
+.exDel:hover { opacity: 1; }
+.exHigh { border-color: #f0d0cc; background: #fdf2f1; color: #8c1d18; }
+.exHigh:hover { background: #fbe5e2; }
+.exMed { border-color: #ecd9a0; background: #fdf8ec; color: #7a5c12; }
+.exMed:hover { background: #f9efd6; }
+.riskDot {
+  display: inline-block; width: .5rem; height: .5rem; border-radius: 50%;
+  background: #c0261c; margin-right: .4rem; vertical-align: baseline;
+}
+.exBtn { display: flex; flex-direction: row; align-items: flex-start; gap: .35rem; text-align: left; }
+.exQ { display: inline; }
+.exBasis { font-size: .72rem; opacity: .75; font-weight: 400; }
+.topicRow {
+  display: flex; flex-wrap: wrap; gap: .45rem; align-items: center;
+  border-top: 1px dashed #e3e6ec; padding-top: .6rem; margin-top: .2rem;
+}
+.topicBtn {
+  border: 1px dashed #b9c4dd; background: transparent; color: #3b5bdb;
+  border-radius: 999px; padding: .3rem .75rem; font-size: .8rem; cursor: pointer;
+}
+.topicBtn:hover { background: #f6f9ff; border-style: solid; }
+.topicBtn:disabled { opacity: .5; cursor: default; }
+.topicUsed { border-style: solid; opacity: .55; }
+.topicUsed::after { content: " ✓"; }
+@media (max-width: 760px) {
+  .catChips { padding-left: .3rem; }
+}
+.progressCard { display: flex; flex-direction: column; gap: .5rem; }
+.progressTrack { height: 6px; border-radius: 3px; background: #e5e9f0; overflow: hidden; }
+.progressFill {
+  height: 100%; border-radius: 3px; background: #2f62e8;
+  transition: width .3s ease-out;
+}
+@media (prefers-reduced-motion: reduce) { .progressFill { transition: none; } }
+
+.busyCard, .sessionCard, .failCard {
+  border-radius: 8px; padding: .85rem 1rem; font-size: .88rem;
+}
+.busyCard { background: #f1f3f7; border: 1px solid #dfe3ea; color: #3b424e; }
+.busyCard p, .sessionCard p { margin: .25rem 0 0; }
+.sessionCard { background: #eaf0fe; border: 1px solid #c9d6f7; color: #1e4bc4; }
+.failCard { background: #fdf2f1; border: 1px solid #f0d0cc; color: #8c1d18; }
+
+.answerCard {
+  background: #fff; border: 1px solid #e3e6ec; border-radius: 12px;
+  padding: 1.25rem 1.4rem; display: flex; flex-direction: column; gap: .9rem;
+}
+
+.durBanner, .reviewBanner {
+  display: flex; gap: .6rem; border-radius: 8px; padding: .7rem .9rem; font-size: .86rem;
+}
+.durBanner { background: #fdf2f1; border: 1px solid #f0d0cc; color: #8c1d18; }
+.durBanner p { margin: .15rem 0 0; font-size: .8rem; }
+.durIcon { font-weight: 800; }
+.reviewBanner { background: #fdf6e8; border: 1px solid #ecdcb8; color: #7a5b12; }
+.reviewBanner ul { margin: .3rem 0 0; padding-left: 1.1rem; }
+.reviewBanner li { margin: .1rem 0; }
+
+.answerBody { font-size: .94rem; line-height: 1.7; max-width: 42rem; white-space: pre-wrap; }
+
+.cite {
+  font: inherit; font-family: ui-monospace, monospace; font-size: .74rem; font-weight: 650;
+  background: #eaf0fe; color: #1e4bc4; border: none; border-radius: 4px;
+  padding: 0 .3rem; cursor: pointer; vertical-align: .1em;
+}
+.cite:hover { background: #d8e4fd; }
+
+.degraded {
+  font-size: .82rem; background: #fdf6e8; color: #7a5b12;
+  border-radius: 6px; padding: .45rem .75rem; margin: 0;
+}
+
+.sources { border-top: 1px solid #e8eaf0; padding-top: .85rem; }
+.sources h4 {
+  margin: 0 0 .5rem; font-size: .76rem; letter-spacing: .08em; text-transform: uppercase;
+  color: #8b93a1; font-weight: 620;
+}
+.src {
+  display: flex; gap: .55rem; align-items: baseline; padding: .32rem .4rem;
+  font-size: .87rem; flex-wrap: wrap; border-radius: 6px;
+}
+.srcN { font-family: ui-monospace, monospace; font-size: .74rem; color: #8b93a1; flex: none; }
+.srcCite { min-width: 0; }
+.conf { font-family: ui-monospace, monospace; font-size: .74rem; color: #8b93a1; margin-left: auto; }
+.srcFlash { animation: flash 1.2s ease-out; }
+@keyframes flash { 0% { background: #eaf0fe; } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .srcFlash { animation: none; } }
+
+.badge { font-size: .72rem; padding: .1rem .5rem; border-radius: 999px; font-weight: 560; flex: none; }
+.private { background: #f3eefb; color: #5b2fa8; }
+.group { background: #eaf0fe; color: #1e4bc4; }
+.org { background: #eef7f0; color: #1c5b30; }
+
+.emptyCard { text-align: center; padding: .9rem 1rem 1.1rem; }
+.emptyMsg { font-weight: 650; margin: 0 0 .3rem; }
+.emptyWhy { color: #5b6472; font-size: .86rem; margin: 0 0 1rem; }
+.ghost {
+  display: inline-block; font-size: .87rem; font-weight: 560; text-decoration: none;
+  color: #2f62e8; border: 1.5px solid #2f62e8; border-radius: 8px; padding: .45rem 1rem;
+}
+.ghost:hover { background: #eaf0fe; }
+
+.reviewBox { border-top: 1px solid #e8eaf0; padding-top: .85rem; font-size: .84rem; }
+.reviewQ { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-bottom: .5rem; }
+.reviewQ > span:first-child { color: #5b6472; min-width: 6.2em; }
+.pill {
+  font: inherit; font-size: .8rem; border: 1px solid #d3d8e0; border-radius: 999px;
+  padding: .15rem .75rem; background: transparent; color: #3b424e; cursor: pointer;
+}
+.pillOn { border-color: #2f62e8; background: #eaf0fe; color: #1e4bc4; font-weight: 600; }
+.pillBad { border-color: #b3261e; background: #fdf2f1; color: #8c1d18; font-weight: 600; }
+.reviewNote {
+  font: inherit; font-size: .82rem; flex: 1; min-width: 12rem;
+  border: 1px solid #d3d8e0; border-radius: 7px; padding: .3rem .6rem;
+}
+.reviewActions {
+  display: flex; justify-content: flex-end; align-items: center;
+  gap: .6rem; margin-top: .35rem;
+}
+.reviewThanks { margin: 0; color: #1c5b30; font-size: .86rem; }
+.reviewErr { color: #8c1d18; font-size: .82rem; }
+
+/* 위험도 텍스트 배지 — title 툴팁은 터치·스크린리더에 안 닿는다 (17 P1-3) */
+.riskTag {
+  display: inline-block; margin-left: .4rem; padding: .05rem .4rem;
+  border-radius: 999px; font-size: .68rem; font-weight: 600;
+  border: 1px solid #ecd9a0; background: #fdf8ec; color: #7a5c12;
+  vertical-align: baseline;
+}
+.riskTagHigh { border-color: #e7b4b0; background: #fdf2f1; color: #8c1d18; }
+
+.ptDemo { font-weight: 400; color: #3b4657; }
+
+.railHint {
+  margin: .35rem 0 .5rem; font-size: .72rem; line-height: 1.45;
+  color: #5b6472;
+}
+
+/* 답변 후 추천 재노출 스트립 (17 P1-2) */
+.followStrip {
+  border: 1px solid #e3e6ec; border-radius: 10px;
+  padding: .55rem .8rem; margin-top: .8rem;
+  display: flex; flex-direction: column; gap: .55rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .reviewBox { border-color: #2a2f38; }
+  .reviewQ > span:first-child { color: #9aa2b1; }
+  .pill { border-color: #333a45; color: #c3c9d4; }
+  .pillOn { border-color: #4a7cf7; background: #1b2947; color: #a9c2ff; }
+  .pillBad { border-color: #5c2b26; background: #2a1614; color: #ffb4a8; }
+  .reviewNote { background: #0f1216; border-color: #333a45; color: #e6e8ee; }
+  .reviewThanks { color: #a6dcb4; }
+  .reviewErr { color: #ffb4a8; }
+  .riskTag { border-color: #55461f; background: #2a2312; color: #e8c96a; }
+  .riskTagHigh { border-color: #5c2b26; background: #2a1614; color: #ffb4a8; }
+  .ptDemo { color: #c3c9d4; }
+  .railHint { color: #9aa2b1; }
+  .followStrip { border-color: #2a2f38; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .askBox { background: #171a20; border-color: #333a45; }
+  .progressTrack { background: #2a2f38; }
+  .progressFill { background: #4a7cf7; }
+  .rail { background: #14171c; border-color: #2a2f38; }
+  .railHead { color: #9aa2b1; border-color: #2a2f38; }
+  .railNew { border-color: #333a45; color: #c3c9d4; }
+  .railNew:hover { background: #22262e; }
+  .railItem { color: #c3c9d4; }
+  .railItem:hover { background: #22262e; }
+  .railItemOn, .railItemOn:hover { background: #1b2947; color: #a9c2ff; }
+  .exLabel, .followNote, .catLabel, .catToggle { color: #9aa2b1; }
+  .catCount { background: #2a2f38; color: #c3c9d4; }
+  .catMore { border-color: #333a45; color: #c3c9d4; }
+  .catMore:hover { background: #22262e; }
+  .exBtn { background: #1b2947; border-color: #2e4173; color: #a9c2ff; }
+  .exBtn:hover { background: #24365e; }
+  .moreBtn { border-color: #333a45; color: #c3c9d4; }
+  .moreBtn:hover { background: #22262e; }
+  .exHigh { background: #2a1614; border-color: #5c2b26; color: #ffb4a8; }
+  .exHigh:hover { background: #3a201d; }
+  .exMed { background: #2a2312; border-color: #55461f; color: #e8c96a; }
+  .exMed:hover { background: #362d18; }
+  .riskDot { background: #ff6b5e; }
+  .topicRow { border-color: #2a2f38; }
+  .topicBtn { border-color: #2e4173; color: #a9c2ff; }
+  .topicBtn:hover { background: #1b2947; }
+  .answerCard { background: #171a20; border-color: #2a2f38; }
+  .ptBanner { background: #1b2947; }
+  .ptWho { color: #a9c2ff; }
+  .ptHint, .progress, .emptyWhy, .srcN, .conf, .sources h4 { color: #9aa2b1; }
+  .busyCard { background: #22262e; border-color: #333a45; color: #c3c9d4; }
+  .sessionCard { background: #1b2947; border-color: #2e4173; color: #a9c2ff; }
+  .failCard, .durBanner { background: #2a1614; border-color: #5c2b26; color: #ffb4a8; }
+  .reviewBanner, .degraded { background: #2a2312; border-color: #55461f; color: #e8c96a; }
+  .cite { background: #1b2947; color: #a9c2ff; }
+  .cite:hover { background: #24365e; }
+  .sources { border-color: #2a2f38; }
+  .srcFlash { animation: flashDark 1.2s ease-out; }
+  .private { background: #2a2138; color: #cbb2f2; }
+  .group { background: #1b2947; color: #a9c2ff; }
+  .org { background: #14251a; color: #a6dcb4; }
+  .ghost { color: #a9c2ff; border-color: #a9c2ff; }
+  .ghost:hover { background: #1b2947; }
+}
+@keyframes flashDark { 0% { background: #1b2947; } 100% { background: transparent; } }

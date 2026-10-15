@@ -1,0 +1,75 @@
+# Cerno — 원내 배포 구성
+#
+# 노출 원칙: **cerno-web 만 외부에 뜬다.** cerno-api 와 redis 는 포트를 열지 않는다.
+# api 가 직접 노출되면 프록시의 신원 서명 계층을 우회할 수 있다.
+
+services:
+  cerno-web:
+    build: ./services/cerno-web
+    restart: unless-stopped
+    # 원내 리버스 프록시(nginx) 뒤에 둔다. 루프백에만 바인딩한다.
+    ports: ["127.0.0.1:3400:3400"]
+    environment:
+      CERNO_PUBLIC_BASE: ${CERNO_PUBLIC_BASE:?CERNO_PUBLIC_BASE 필요}
+      CERNO_SMART_CLIENT_ID: ${CERNO_SMART_CLIENT_ID:?}
+      CERNO_SMART_CLIENT_SECRET: ${CERNO_SMART_CLIENT_SECRET:?}
+      CERNO_SMART_ISS_ALLOW: ${CERNO_SMART_ISS_ALLOW:-his.example.org}
+      CERNO_SMART_DEFAULT_ISS: ${CERNO_SMART_DEFAULT_ISS:-https://his.example.org}
+      CERNO_SMART_SCOPE: ${CERNO_SMART_SCOPE:-}
+      # 세션 HMAC. 비면 모든 세션 검증이 통과하지 못하도록 필수로 둔다.
+      CERNO_SESSION_SECRET: ${CERNO_SESSION_SECRET:?CERNO_SESSION_SECRET 필요}
+      CERNO_SESSION_TTL: ${CERNO_SESSION_TTL:-28800}
+      CERNO_API_INTERNAL: http://cerno-api:8300
+      CERNO_API_KEY: ${CERNO_API_KEY:?CERNO_API_KEY 필요}
+      CERNO_REDIS_URL: ${CERNO_REDIS_URL:?CERNO_REDIS_URL 필요}
+    depends_on:
+      cerno-api: {condition: service_healthy}
+      cerno-redis: {condition: service_healthy}
+
+  cerno-api:
+    build: ./services/cerno-api
+    restart: unless-stopped
+    # ⚠️ ports 를 열지 않는다 — 신원 서명 프록시를 우회하는 경로를 만들지 않는다.
+    expose: ["8300"]
+    environment:
+      CERNO_API_KEY: ${CERNO_API_KEY:?}
+      CERNO_AI_BASE: ${CERNO_AI_BASE:?CERNO_AI_BASE 필요}
+      CERNO_AI_KEY: ${CERNO_AI_KEY:-}
+      # 의료진별 키 JSON 맵. 단일 키로 두면 공정 큐 버킷을 공유해 동시 1건이 된다.
+      CERNO_AI_KEYS: ${CERNO_AI_KEYS:-}
+      # 사용 키들 중 가장 이른 만료일(ISO). D-7 부터 로그·/metrics 경보 (리스크 #7)
+      CERNO_AI_KEY_EXPIRES: ${CERNO_AI_KEY_EXPIRES:-}
+      CERNO_AI_MODEL: ${CERNO_AI_MODEL:-qwen2.5:14b}
+      CERNO_FHIR_BASE: ${CERNO_FHIR_BASE:?CERNO_FHIR_BASE 필요}
+      CERNO_REDIS_URL: ${CERNO_REDIS_URL:?}
+      CERNO_CONFIG_DIR: /app/config
+      CERNO_DB_PATH: /app/data/cerno.db
+      CERNO_CONFIDENCE_MIN: ${CERNO_CONFIDENCE_MIN:-0.45}
+    volumes:
+      - ./config:/app/config:ro
+      # 문서 등록부(매니페스트·비PHI). 본문·PHI 는 저장하지 않는다.
+      - cerno-data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request;urllib.request.urlopen('http://127.0.0.1:8300/health').read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  cerno-redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # 🔴 인증 필수. 살아있는 HIS access_token 이 여기 있다 — twin 이 무인증 상태로
+    # 운영하다 v1.20.66 에서 봉합한 이력이 있다. 미설정 시 기동 실패시킨다.
+    command: ["redis-server", "--requirepass", "${CERNO_REDIS_PASSWORD:?CERNO_REDIS_PASSWORD 필요}",
+              "--save", "", "--appendonly", "no"]
+    expose: ["6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${CERNO_REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  cerno-data:

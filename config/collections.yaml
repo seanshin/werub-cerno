@@ -1,0 +1,46 @@
+# Cerno Library 계층 컬렉션 매핑 (01_구현계획.md §3.1)
+#
+# 공개범위별 3컬렉션으로 물리 분리하고, 개인 구분은 메타데이터로 한다.
+# 의료진별 컬렉션으로 쪼개지 않는 이유: AI 서버 /api/rag/search 는 단일 컬렉션만
+# 받으므로 인원에 비례해 검색 호출이 늘어난다(rate limit 120/min = 요청 수 기준).
+# 3컬렉션이면 검색 호출이 인원과 무관하게 항상 3회 → 분당 40질의.
+#
+# private 을 별도 컬렉션에 두는 이유: 최악 시나리오는 타 의료진 private 노출이다.
+# 물리 분리해 두면 필터 버그가 나도 org/group 오혼입 정도로 피해가 제한된다.
+
+collections:
+  private:
+    name: cerno_priv
+    visibility: private
+    # 접근: 본인만. filter 는 서버가 계산한 clinician_id 로만 구성한다(클라이언트 지정 금지).
+    filter_template: { owner: "{clinician_id}" }
+    source_required: false
+
+  group:
+    name: cerno_grp
+    visibility: group
+    # 그룹 수가 10을 넘으면 $in 단일 키로 처리($and 최상위 키 상한 10)
+    filter_template: { group: { $in: "{groups}" } }
+    source_required: false
+
+  org:
+    name: cerno_org
+    visibility: org
+    filter_template: null
+    source_required: true        # 출처(doi|url|publication) + license_approved 필수
+
+search:
+  mode: hybrid                   # vector | hybrid | keyword — RRF + FTS5
+  rerank: true
+  n_results_per_collection: 5
+  merge: rrf                     # 3컬렉션 결과 병합
+  # 근거 게이트 — AI 서버 medical_reference_min_similarity 기준선 0.45.
+  # ⚠️ Cerno 코퍼스로 Phase 2-6에서 재실측할 것(twin 이 임계 오설정으로 무관 근거를 인용한 전례).
+  confidence_min: 0.45
+
+ingest:
+  batch_size: 500                # AI 서버 상한. 단건 1.47s/건 vs 배치 ~12ms/건
+  rate_limit_per_min: 120        # 요청 수 기준. DELETE 포함
+  chunk_strategy: paragraph
+  max_chunk_chars: 500
+  chunk_overlap: 50

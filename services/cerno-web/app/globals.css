@@ -1,0 +1,34 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #f6f7f9;
+  color: #16181d;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font: 15px/1.6 -apple-system, "Pretendard", "Apple SD Gothic Neo", system-ui, sans-serif;
+}
+
+body > main { flex: 1; }
+
+/* 의료기기 아님 고지 — 모든 화면에 상시 노출한다(백서 §8·사양서 §10).
+   페이지마다 붙이면 언젠가 한 곳이 빠진다. */
+.cerno-disclaimer {
+  padding: 1rem 1.25rem 2rem;
+  text-align: center;
+  font-size: .78rem;
+  color: #8b93a1;
+  border-top: 1px solid #e3e6ec;
+  margin-top: 2rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body { background: #0f1216; color: #e6e8ee; }
+  .cerno-disclaimer { color: #767e8c; border-color: #22262e; }
+}

@@ -1,0 +1,59 @@
+# 의료진 프로파일 — 그룹 소속과 개인화 설정
+#
+# ⚠️ 여기의 id 는 **인증 결과와 대조하는 용도**이지 신원의 출처가 아니다.
+# clinician_id 는 오직 검증된 SMART id_token 의 fhirUser(Practitioner/{id})에서만
+# 도출한다(01_구현계획.md §3.2 불변 규칙 4). 이 파일에 없는 id 로 로그인하면
+# 기본 프로파일(그룹 없음·기본 프롬프트)로 동작하며, 거부하지 않는다.
+
+defaults:
+  prompt_version: cerno.narrative@1.0.0
+  evidence_weight:
+    private: 1.3        # 개인 서고 우선 인용
+    group: 1.1
+    org: 1.0
+  few_shot_k: 2         # 개인 서고에서 뽑을 예시 수
+
+# 개발용 등록 (2026-08-04) — 두 명 모두 의사 role 계정의 실 EHR launch fhirUser
+# (Redis SMART 토큰 키로 확인). admin 계정(…a00001)은 파일럿 대상에서 제외.
+clinicians:
+  - id: "00000000-0000-4000-a000-000000a00003"   # 실 launch 확인 (2026-08-04, 박내과)
+    display_name: "파일럿 의료진 A"
+    specialty: pulmonology                       # HIS 시드: 내과/호흡기내과
+    groups: []
+    consent:
+      personalization: false
+      distillation: false
+  - id: "00000000-0000-4000-a000-000000a00002"   # 실 launch 확인 (2026-08-04, 김내과)
+    display_name: "파일럿 의료진 B"
+    specialty: cardiology                        # HIS 시드: 내과/순환기내과
+    groups: []
+    consent:
+      personalization: false
+      distillation: false
+  # 예시 (파일럿 착수 시 채움):
+  # - id: "12345"                    # HIS Practitioner/{id}
+  #   display_name: "김○○"
+  #   specialty: cardiology
+  #   groups: [cardio-dept]
+  #   prompt_version: cerno.narrative@1.0.0
+  #   style_notes: |
+  #     결론을 먼저 제시하고 근거를 뒤에 붙인다.
+  #     감별진단은 가능성 순으로 3개까지만.
+  #   # few-shot — 형식·어조 예시. **검색이 아니라 큐레이션이다**(personal/prompt.py 참조):
+  #   #   규제 추적성(프롬프트가 요청마다 달라지면 prompt_version 이 무의미)
+  #   #   + 동시성(검색 1회 추가 = 버킷 점유 ~1.16초)
+  #   # ⚠️ 예시의 내용은 사실로 쓰이지 않는다. 형식만 참고하도록 프롬프트가 지시한다.
+  #   #    그래도 **틀린 임상 내용을 예시로 넣지 말 것** — 모델이 흘려 쓸 수 있다.
+  #   few_shot:
+  #     - q: 심방세동 항응고 시작 기준은?
+  #       a: |
+  #         CHA2DS2-VASc 2점 이상에서 항응고를 시작합니다.[1]
+  #         출혈 위험은 HAS-BLED로 함께 평가하되, 높다고 항응고를 보류하지는 않습니다.[2]
+  #   consent:
+  #     personalization: false       # 개인화 적용 동의
+  #     distillation: false          # ⚠️ 증류는 Phase 4-B 파킹. 현재 미사용
+
+groups:
+  # - id: cardio-dept
+  #   name: 순환기내과
+  #   members: ["12345"]
